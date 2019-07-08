@@ -14,24 +14,19 @@ const binance = require('node-binance-api')().options({
 })
 
 
-router.get('/', function(req, res, next) {
-  //Socket connection
+
   io.sockets.on('connection', function(socket){
     console.log('A user connected');
-    socket.on('hola', function(data){
-        console.log(data);
-      })
-      binance.websockets.depth(['BNBBTC'], (depth) => {
-        let {e:eventType, E:eventTime, s:symbol, u:updateId, b:bidDepth, a:askDepth} = depth;
-        // console.log(symbol+" market depth update");
-        // console.log(typeof(bidDepth))
-        socket.emit('depth', { bids : bidDepth, asks: askDepth })
-        // console.log(bidDepth, askDepth);
-      });
-  })
-  res.render('index');
-});
 
+    binance.websockets.depthCache(["BNBBTC"], function(symbol, depth) {
+      let max = 10; // Only show the 10 best bids / asks (optional)
+      let bids = binance.sortBids(depth.bids, max);
+      let asks = binance.sortAsks(depth.asks, max);
+      socket.emit('depth', { bids : bids, asks: asks })
+    });
+      
+     
+  })
 
   
 

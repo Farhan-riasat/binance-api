@@ -11,7 +11,7 @@ const binance = require('node-binance-api')().options({
 
 /* GET index page. */
 router.get('/', function(req, res, next) {
-  res.send('index')
+  res.render('index')
 });
 
 /* GET prices. */
