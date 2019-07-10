@@ -2,11 +2,13 @@ var express = require('express');
 var router = express.Router();
 
 //Binance Configuration
+//farhan's account keys
+// APIKEY:'hiUcymVMltdUlTfFrO9eLs0JTL78PONVmFPDUEGRCdixHbUgWouTwe7CEcS2Po7b',
+  // APISECRET:'RKYQM6avRGYXs70qldjuUVJzCEaeSxUxZV12C2Dr6RUAA3PndWNcE39OSE2soN7i',
 const binance = require('node-binance-api')().options({
-  APIKEY: '9Roef76CZNyQ3U2OVfKsgl9wOIyzo7MN5xm8FYNO6yUpdj4Qn0itgkueTiEjnkIm',
-  APISECRET: '0E7TtFytLVJOyC6xgnTwaLsvuvGbIrUFtJragvXREBp7M08ofuxEWPbRJp0yWjhw',
-  // useServerTime: true, // If you get timestamp errors, synchronize to server time at startup
-  // 'test':true
+  APIKEY:'9Roef76CZNyQ3U2OVfKsgl9wOIyzo7MN5xm8FYNO6yUpdj4Qn0itgkueTiEjnkIm',
+  APISECRET:'0E7TtFytLVJOyC6xgnTwaLsvuvGbIrUFtJragvXREBp7M08ofuxEWPbRJp0yWjhw',
+  useServerTime: true, // If you get timestamp errors, synchronize to server time at startup
 })
 
 /* GET index page. */
@@ -14,27 +16,29 @@ router.get('/', function(req, res, next) {
   res.render('index')
 });
 
-/* GET prices. */
-router.get('/prices', function (req, res, next) {
-  binance.allOrders("ETHBTC", (error, orders, symbol) => {
-    console.log(symbol + " orders:", orders);
-  })
-});
-
-
-/* GET available balances for currencies. */
-router.get('/available', function(req, res, next) {
-  binance.balance((error, balances) => {
-    if ( error ) return console.error(error);
-    console.log("ETH balance: ", balances.ETH.available);
+/* GET available balances for currencies.. */
+router.get('/balance', function (req, res, next) {
+    binance.balance((error, balances) => {
+      if ( error ) return console.error(error);
+      console.log("balances: ", balances);
   });
 });
 
 
+/* Market Buy. */
+router.get('/market-buy', function(req, res, next) {
+  var quantity = 1;
+  binance.marketBuy("BNBBTC", quantity, (error, response) => {
+    console.log("Market Buy response", response);
+    console.log("order id: " + response.orderId);
+  })
+});
+
+
 /* Placing a LIMIT order */
-router.get('/limitOrder', function(req, res, next) {
-  var quantity = 5, price = 0.031712030;
-  binance.buy("BNBETH", quantity, price, {type:'LIMIT'}, (error, rense) => {
+router.get('/limit-Order', function(req, res, next) {
+  var quantity = 1, price = 0.031712030;
+  binance.buy("BNBBTC", quantity, price, {type:'LIMIT'}, (error, rense) => {
     console.log("Limit Buy response", rense);
     console.log("order id: " + rense.orderId);
   });
@@ -43,7 +47,7 @@ router.get('/limitOrder', function(req, res, next) {
 
 
 /* Bid and Ask detail for every coin */
-router.get('/bidAsk', function(req, res, next) {
+router.get('/bid-Ask', function(req, res, next) {
   binance.bookTickers((error, ticker) => {
     if ( error ) return console.error(error);
     res.status(200).send(ticker);

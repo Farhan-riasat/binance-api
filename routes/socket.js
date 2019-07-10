@@ -8,27 +8,27 @@ socketApi.io = io;
 
 //Binance Configuration
 const binance = require('node-binance-api')().options({
-  APIKEY: 'QFpmKiwJNOfDqC8FQ4S4zpZHBMksPT4GyWX9PgOAbSM8J8X8Z5ySeYgvPFFnlOrO',
-  APISECRET: 'jIQ0vZqAnXgv5w9QGjESICoToHmVrUvqlyuCZDEQF39fNlPiyAtyAPmvJi5payIN',
+  APIKEY: '9Roef76CZNyQ3U2OVfKsgl9wOIyzo7MN5xm8FYNO6yUpdj4Qn0itgkueTiEjnkIm',
+  APISECRET: '0E7TtFytLVJOyC6xgnTwaLsvuvGbIrUFtJragvXREBp7M08ofuxEWPbRJp0yWjhw',
   useServerTime: true // If you get timestamp errors, synchronize to server time at startup
 })
 
 
+//Socket connection
+io.sockets.on('connection', function(socket){
+  console.log('A user connected');
+  binance.websockets.depthCache(["BNBBTC"], function(symbol, depth) {
+    let max = 10; // Only show the 10 best bids / asks (optional)
+    let bids = binance.sortBids(depth.bids, max);
+    let asks = binance.sortAsks(depth.asks, max);
+    let bid  = Object.entries(bids).map(([k,v])=>[+k,v]);
+    let ask  = Object.entries(asks).map(([k,v])=>[+k,v]);
+    socket.emit('depth', { bids : bid, asks: ask })
+  });
+})
 
-  io.sockets.on('connection', function(socket){
-    console.log('A user connected');
 
-    binance.websockets.depthCache(["BNBBTC"], function(symbol, depth) {
-      let max = 10; // Only show the 10 best bids / asks (optional)
-      let bids = binance.sortBids(depth.bids, max);
-      let asks = binance.sortAsks(depth.asks, max);
-      socket.emit('depth', { bids : bids, asks: asks })
-    });
-      
-     
-  })
 
-  
 
 module.exports = {
   router,
