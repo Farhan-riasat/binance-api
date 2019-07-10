@@ -2,9 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 //Binance Configuration
-//farhan's account keys
-// APIKEY:'hiUcymVMltdUlTfFrO9eLs0JTL78PONVmFPDUEGRCdixHbUgWouTwe7CEcS2Po7b',
-  // APISECRET:'RKYQM6avRGYXs70qldjuUVJzCEaeSxUxZV12C2Dr6RUAA3PndWNcE39OSE2soN7i',
+
 const binance = require('node-binance-api')().options({
   APIKEY:'9Roef76CZNyQ3U2OVfKsgl9wOIyzo7MN5xm8FYNO6yUpdj4Qn0itgkueTiEjnkIm',
   APISECRET:'0E7TtFytLVJOyC6xgnTwaLsvuvGbIrUFtJragvXREBp7M08ofuxEWPbRJp0yWjhw',
