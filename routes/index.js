@@ -4,8 +4,8 @@ var router = express.Router();
 //Binance Configuration
 
 const binance = require('node-binance-api')().options({
-  APIKEY:'9Roef76CZNyQ3U2OVfKsgl9wOIyzo7MN5xm8FYNO6yUpdj4Qn0itgkueTiEjnkIm',
-  APISECRET:'0E7TtFytLVJOyC6xgnTwaLsvuvGbIrUFtJragvXREBp7M08ofuxEWPbRJp0yWjhw',
+  APIKEY:'',
+  APISECRET:'',
   useServerTime: true, // If you get timestamp errors, synchronize to server time at startup
 })
 
